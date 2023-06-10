@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazorise" Version="1.2.3" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.2.3" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.16" PrivateAssets="all" />
+    <PackageReference Include="PSC.Blazor.Components.DataTable" Version="6.0.9" />
+    <PackageReference Include="Syncfusion.Blazor.Buttons" Version="21.2.9" />
+    <PackageReference Include="Syncfusion.Blazor.Calendars" Version="21.2.9" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="21.2.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Atlas.Reporting.DAL\Atlas.Reporting.DAL.csproj" />
+    <ProjectReference Include="..\Shared\Atlas.Reporting.UI.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

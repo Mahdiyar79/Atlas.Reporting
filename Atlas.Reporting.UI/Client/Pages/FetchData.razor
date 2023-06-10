@@ -1,0 +1,113 @@
+﻿@page "/fetchdata"
+@using Atlas.Reporting.UI.Shared.DTOs
+@using PSC.Blazor.Components.DataTable
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Calendars
+@using System.Text.Json
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Data
+
+@inject HttpClient httpClient
+
+<h3>Filter ReportDTo</h3>
+
+<div class="form-group">
+    <label for="vendorCodeInput">Vendor Code:</label>
+    <input id="vendorCodeInput" type="text" @bind="@vendorCode" />
+</div>
+
+<div class="form-group">
+    <label for="startDatePicker">Start Date:</label>
+    <SfDatePicker TValue="DateTime" Value="@startDate" ValueChanged="OnStartDateChanged"></SfDatePicker>
+</div>
+
+<div class="form-group">
+    <label for="endDatePicker">end Date:</label>
+    <SfDatePicker TValue="DateTime" Value="@endDate" ValueChanged="OnEndDateChanged"></SfDatePicker>
+</div>
+
+<div class="form-group">
+    <label>Snapp Is Active:</label>
+    <SfCheckBox Checked="@snappIsActive" TChecked="bool"></SfCheckBox>
+</div>
+
+<div class="form-group">
+    <label>IsActive:</label>
+    <SfCheckBox Checked="@isActive" TChecked="bool"></SfCheckBox>
+</div>
+
+<div class="form-group">
+    <label for="brandIdInput">Brand ID:</label>
+    <input id="brandIdInput" type="text" @bind="@brandId" />
+</div>
+
+<button class="btn btn-primary" @onclick="ViewReport">View Report</button>
+
+@if (ReportDTos != null)
+{
+    <SfGrid  DataSource="@ReportDTos">
+        <GridColumns>
+            <GridColumn Field="@nameof(ReportDto.Raw)" HeaderText="Raw"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.BrandId)" HeaderText="Brand ID"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.ClientId)" HeaderText="Client ID"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.VendorName)" HeaderText="VendorName"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.LastPing)" HeaderText="LastPing"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.Total)" HeaderText="Total"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.SnappFood)" HeaderText="SnappFood"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.Salon)" HeaderText="Salon"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.SnappIsActive)" HeaderText="SnappIsActive"></GridColumn>
+            <GridColumn Field="@nameof(ReportDto.IsActive)" HeaderText="IsActive"></GridColumn>
+        </GridColumns>
+    </SfGrid>
+}
+@code {
+    private string vendorCode = "";
+    private DateTime startDate = DateTime.Now;
+    private DateTime endDate = DateTime.Now;
+    private bool snappIsActive;
+    private bool isActive = true;
+    private int brandId = 1;
+
+    private List<ReportDto> ReportDTos;
+    private string filter;
+
+    private async Task ViewReport()
+    {
+        try
+        {
+            var response = await httpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={startDate}&endDate={endDate}&snappIsActive={snappIsActive}&isActive={isActive}&brandId={brandId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var reportDtoList = await response.Content.ReadFromJsonAsync<List<ReportDto>>();
+                ReportDTos = reportDtoList;
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Request failed: {response.StatusCode}, {errorContent}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    private void OnStartDateChanged(DateTime newDate)
+    {
+        startDate = newDate;
+    }
+    private void OnEndDateChanged(DateTime newDate)
+    {
+        endDate = newDate;
+    }
+    private void OnFilterChanged(string newFilter)
+    {
+        filter = newFilter;
+    }
+    private void OnCheckChange(bool newIsActive)
+    {
+        snappIsActive = newIsActive;
+    }
+}
