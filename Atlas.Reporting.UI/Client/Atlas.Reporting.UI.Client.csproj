@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.16" PrivateAssets="all" />
     <PackageReference Include="PSC.Blazor.Components.DataTable" Version="6.0.9" />
+    <PackageReference Include="Radzen.Blazor" Version="4.13.0" />
     <PackageReference Include="Syncfusion.Blazor.Buttons" Version="21.2.9" />
     <PackageReference Include="Syncfusion.Blazor.Calendars" Version="21.2.9" />
     <PackageReference Include="Syncfusion.Blazor.Grid" Version="21.2.9" />

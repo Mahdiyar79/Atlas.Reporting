@@ -53,16 +53,17 @@ namespace Atlas.Reporting.DAL.Services
                 //}
                 Brand? brand;
                 if (report.BrandId != null)
-                    brand = _snappFoodContext.Brands.Where(a => a.BrandId == report.BrandId).FirstOrDefault();
+                    brand = _snappFoodContext.Brands.FirstOrDefault(a => a.BrandId == report.BrandId);
                 else
                 {
-                    brand = _snappFoodContext.Brands.Where(a => a.SnappClientId == report.VendorCode).FirstOrDefault();
+                    brand = _snappFoodContext.Brands.FirstOrDefault(a => a.SnappClientId == report.VendorCode);
                     report.BrandId = brand.BrandId;
                 }
-                var branchConnection = _internalSendingContext.BranchConnections.Where(a => a.BrandId == report.BrandId).FirstOrDefault();
+                var branchConnection = _internalSendingContext.BranchConnections.FirstOrDefault(a => a.BrandId == report.BrandId);
 
                 result = await _orderContext.Orders
-                    .Where(o => (o.OrderDate >= report.StartDate && o.OrderDate <= report.EndDate) && o.BranchId == report.BrandId)
+                    .Where(o => (o.OrderDate >= report.StartDate && o.OrderDate <= report.EndDate)
+                                && o.BranchId == report.BrandId)
                     .GroupBy(o => new { o.BranchId, o.SourceTypeId })
                     .Select(g => new ReportDto
                     {
