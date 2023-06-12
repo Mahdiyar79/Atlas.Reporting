@@ -30,12 +30,7 @@
 
 <div class="form-group">
     <label>Snapp Is Active:</label>
-    <SfCheckBox Checked="@snappIsActive" TChecked="bool"></SfCheckBox>
-</div>
-
-<div class="form-group">
-    <label>IsActive:</label>
-    <SfCheckBox Checked="@isActive" TChecked="bool"></SfCheckBox>
+    <SfCheckBox Checked="@snappIsActive" TChecked="bool?"></SfCheckBox>
 </div>
 
 <div class="form-group">
@@ -58,17 +53,16 @@
             <GridColumn Field="@nameof(ReportDto.SnappFood)" HeaderText="SnappFood"></GridColumn>
             <GridColumn Field="@nameof(ReportDto.Salon)" HeaderText="Salon"></GridColumn>
             <GridColumn Field="@nameof(ReportDto.SnappIsActive)" HeaderText="SnappIsActive"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.IsActive)" HeaderText="IsActive"></GridColumn>
         </GridColumns>
     </SfGrid>
 }
 @code {
-    private string vendorCode = "";
+    private string? vendorCode;
     private DateTime startDate = DateTime.Now;
     private DateTime endDate = DateTime.Now;
-    private bool snappIsActive;
-    private bool isActive = true;
-    private int brandId = 1;
+    private bool? snappIsActive;
+    private bool? isActive;
+    private int? brandId;
 
     private List<ReportDto> ReportDTos;
     private string filter;
@@ -77,7 +71,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={startDate}&endDate={endDate}&snappIsActive={snappIsActive}&isActive={isActive}&brandId={brandId}");
+            var response = await httpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={DateTime.ParseExact("2023-04-01 22:12 PM", "yyyy-MM-dd HH:mm tt",null)}&endDate={DateTime.ParseExact("2023-04-29 22:12 PM", "yyyy-MM-dd HH:mm tt",null)}&snappIsActive={snappIsActive}&brandId={brandId}");
             if (response.IsSuccessStatusCode)
             {
                 var reportDtoList = await response.Content.ReadFromJsonAsync<List<ReportDto>>();

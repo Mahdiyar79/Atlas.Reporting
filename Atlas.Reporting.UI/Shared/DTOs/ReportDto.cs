@@ -2,7 +2,11 @@
 {
     public class ReportDto
     {
-        public int Raw { get; set; }
+        public ReportDto()
+        {
+            Raw++;
+        }
+        public int Raw { get; set; } = 0;
         public int BrandId { get; set; }
         public string? ClientId { get; set; }
         public DateTime LastPing { get; set; }
@@ -11,6 +15,5 @@
         public int SnappFood { get; set; }
         public int Salon { get; set; }
         public bool? SnappIsActive { get; set; }
-        public bool? IsActive { get; set; }
     }
 }

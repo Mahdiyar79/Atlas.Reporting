@@ -14,7 +14,7 @@ namespace Atlas.Reporting.UI.Server.Controllers
             _reportingService = reportingService;
         }
         [HttpGet]
-        public async Task<IActionResult> Get(string? vendorCode , DateTime startDate, DateTime endDate , bool? snappIsActive,bool? isActive , int? brandId)
+        public async Task<IActionResult> Get(string? vendorCode, DateTime startDate, DateTime endDate, bool? snappIsActive, int? brandId)
         {
             try
             {
@@ -24,7 +24,6 @@ namespace Atlas.Reporting.UI.Server.Controllers
                     StartDate = startDate,
                     EndDate = endDate,
                     SnappIsActive = snappIsActive,
-                    IsActive = isActive,
                     BrandId = brandId
                 };
 
@@ -35,17 +34,6 @@ namespace Atlas.Reporting.UI.Server.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
-            // ReportReqDto report = new ReportReqDto() 
-            // {
-            //     BrandId = brandId,
-            //     StartDate = startDate,
-            //     EndDate = endDate, 
-            //     SnappIsActive = snappIsActive,
-            //     IsActive = isAcyive,
-            // };
-            //return Ok( await  _reportingService.GetReportBy(report));
-
-
         }
     }
 }
