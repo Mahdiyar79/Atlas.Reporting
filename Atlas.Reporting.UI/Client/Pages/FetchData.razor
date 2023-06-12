@@ -1,68 +1,71 @@
 ﻿@page "/fetchdata"
 @using Atlas.Reporting.UI.Shared.DTOs
-@using PSC.Blazor.Components.DataTable
-@using System.Net.Http
-@using System.Net.Http.Json
-@using Syncfusion.Blazor.Buttons
-@using Syncfusion.Blazor.Calendars
-@using System.Text.Json
-@using Syncfusion.Blazor.Grids
-@using Syncfusion.Blazor.Data
 
-@inject HttpClient httpClient
+@inject HttpClient HttpClient
 
 <h3>Filter ReportDTo</h3>
 
 <div class="form-group">
-    <label for="vendorCodeInput">Vendor Code:</label>
-    <input id="vendorCodeInput" type="text" @bind="@vendorCode" />
+    <RadzenFormField Text="Vendor Code:" Style="width: 100%;">
+        <RadzenTextBox @bind-Value="@vendorCode" Style="width: 100%;"/>
+    </RadzenFormField>
 </div>
 
 <div class="form-group">
-    <label for="startDatePicker">Start Date:</label>
-    <SfDatePicker TValue="DateTime" Value="@startDate" ValueChanged="OnStartDateChanged"></SfDatePicker>
+    <label for="startDatePicker">start Date:</label>
+    <RadzenDatePicker TValue="DateTime?" @bind-Value=@startDate Change="@(args => startDate =  args)"/>
 </div>
 
 <div class="form-group">
     <label for="endDatePicker">end Date:</label>
-    <SfDatePicker TValue="DateTime" Value="@endDate" ValueChanged="OnEndDateChanged"></SfDatePicker>
+    <RadzenDatePicker TValue="DateTime?" @bind-Value="@endDate" Change="@(args => endDate =  args)"/>
 </div>
 
 <div class="form-group">
-    <label>Snapp Is Active:</label>
-    <SfCheckBox Checked="@snappIsActive" TChecked="bool?"></SfCheckBox>
+    <RadzenCheckBox @bind-Value=@snappIsActive Name="snappIsActive"/>
+    <RadzenLabel Text="Snapp Is Active:" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;"/>
+
 </div>
 
 <div class="form-group">
-    <label for="brandIdInput">Brand ID:</label>
-    <input id="brandIdInput" type="text" @bind="@brandId" />
+    <RadzenCheckBox @bind-Value=@isActive Name="isActive"/>
+    <RadzenLabel Text="IsActive:" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;"/>
+</div>
+
+<div class="form-group">
+    <RadzenFormField Text="Brand ID:" Style="width: 100%;">
+        <RadzenTextBox @bind-Value="@brandId" Style="width: 100%;"/>
+    </RadzenFormField>
 </div>
 
 <button class="btn btn-primary" @onclick="ViewReport">View Report</button>
 
 @if (ReportDTos != null)
 {
-    <SfGrid  DataSource="@ReportDTos">
-        <GridColumns>
-            <GridColumn Field="@nameof(ReportDto.Raw)" HeaderText="Raw"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.BrandId)" HeaderText="Brand ID"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.ClientId)" HeaderText="Client ID"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.VendorName)" HeaderText="VendorName"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.LastPing)" HeaderText="LastPing"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.Total)" HeaderText="Total"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.SnappFood)" HeaderText="SnappFood"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.Salon)" HeaderText="Salon"></GridColumn>
-            <GridColumn Field="@nameof(ReportDto.SnappIsActive)" HeaderText="SnappIsActive"></GridColumn>
-        </GridColumns>
-    </SfGrid>
+    <RadzenDataGrid Data="@ReportDTos" TItem="ReportDto" GridLines="@GridLines">
+        <Columns>
+            <RadzenDataGridColumn TItem="ReportDto" Property="Raw" Title="Raw"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="BrandId" Title="Brand ID"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="ClientId" Title="Client ID"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="VendorName" Title="VendorName"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="LastPing" Title="LastPing"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="Total" Title="Total"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="SnappFood" Title="SnappFood"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="Salon" Title="Salon"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="SnappIsActive" Title="SnappIsActive"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="IsActive" Title="IsActive"/>
+        </Columns>
+    </RadzenDataGrid>
 }
+
 @code {
-    private string? vendorCode;
-    private DateTime startDate = DateTime.Now;
-    private DateTime endDate = DateTime.Now;
-    private bool? snappIsActive;
-    private bool? isActive;
-    private int? brandId;
+    DataGridGridLines GridLines = DataGridGridLines.Default;
+    private string vendorCode = "";
+    private DateTime? startDate = DateTime.Now;
+    private DateTime? endDate = DateTime.Now;
+    private bool snappIsActive;
+    private bool isActive = true;
+    private string brandId = "";
 
     private List<ReportDto> ReportDTos;
     private string filter;
@@ -71,7 +74,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={DateTime.ParseExact("2023-04-01 22:12 PM", "yyyy-MM-dd HH:mm tt",null)}&endDate={DateTime.ParseExact("2023-04-29 22:12 PM", "yyyy-MM-dd HH:mm tt",null)}&snappIsActive={snappIsActive}&brandId={brandId}");
+            var response = await HttpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={startDate}&endDate={endDate}&snappIsActive={snappIsActive}&isActive={isActive}&brandId={brandId}");
             if (response.IsSuccessStatusCode)
             {
                 var reportDtoList = await response.Content.ReadFromJsonAsync<List<ReportDto>>();
@@ -88,20 +91,5 @@
             throw new Exception(ex.Message);
         }
     }
-    private void OnStartDateChanged(DateTime newDate)
-    {
-        startDate = newDate;
-    }
-    private void OnEndDateChanged(DateTime newDate)
-    {
-        endDate = newDate;
-    }
-    private void OnFilterChanged(string newFilter)
-    {
-        filter = newFilter;
-    }
-    private void OnCheckChange(bool newIsActive)
-    {
-        snappIsActive = newIsActive;
-    }
+
 }

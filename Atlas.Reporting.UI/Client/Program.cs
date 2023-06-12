@@ -6,7 +6,6 @@ using Atlas.Reporting.UI.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Syncfusion.Blazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -27,6 +26,6 @@ builder.Services.AddDbContext<InternalSendingContext>
         c.UseSqlServer(builder.Configuration.GetConnectionString("InternalCnn"));
     });
 builder.Services.AddScoped<ReportingService>();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddSyncfusionBlazor();
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
 await builder.Build().RunAsync();
