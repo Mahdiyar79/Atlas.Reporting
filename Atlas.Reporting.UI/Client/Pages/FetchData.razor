@@ -13,12 +13,12 @@
 
 <div class="form-group">
     <label for="startDatePicker">start Date:</label>
-    <RadzenDatePicker @bind-Value=@startDate/>
+    <RadzenDatePicker TValue="DateTime?" @bind-Value=@startDate Change="@(args => startDate =  args)"/>
 </div>
 
 <div class="form-group">
     <label for="endDatePicker">end Date:</label>
-    <RadzenDatePicker @bind-Value="@endDate"/>
+    <RadzenDatePicker TValue="DateTime?" @bind-Value="@endDate" Change="(args => endDate =  args)"/>
 </div>
 
 <div class="form-group">
@@ -34,7 +34,7 @@
 
 <div class="form-group">
     <RadzenFormField Text="Brand ID:" Style="width: 100%;">
-        <RadzenTextBox @bind-Value="@brandId"  Style="width: 100%;"/>
+        <RadzenTextBox @bind-Value="@brandId" Style="width: 100%;"/>
     </RadzenFormField>
 </div>
 
@@ -42,27 +42,27 @@
 
 @if (ReportDTos != null)
 {
-    <RadzenDataGrid Data="@ReportDTos"  TItem="ReportDto" GridLines="@GridLines" >
+    <RadzenDataGrid Data="@ReportDTos" TItem="ReportDto" GridLines="@GridLines">
         <Columns>
-            <RadzenDataGridColumn TItem="ReportDto" Property="Raw" Title="Raw" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="BrandId" Title="Brand ID" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="ClientId" Title="Client ID" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="VendorName" Title="VendorName" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="LastPing" Title="LastPing" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="Total" Title="Total" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="SnappFood" Title="SnappFood" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="Salon" Title="Salon" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="SnappIsActive" Title="SnappIsActive" />
-            <RadzenDataGridColumn TItem="ReportDto" Property="IsActive" Title="IsActive" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="Raw" Title="Raw"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="BrandId" Title="Brand ID"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="ClientId" Title="Client ID"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="VendorName" Title="VendorName"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="LastPing" Title="LastPing"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="Total" Title="Total"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="SnappFood" Title="SnappFood"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="Salon" Title="Salon"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="SnappIsActive" Title="SnappIsActive"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="IsActive" Title="IsActive"/>
         </Columns>
     </RadzenDataGrid>
 }
 
 @code {
-    Radzen.DataGridGridLines GridLines = Radzen.DataGridGridLines.Default;
+    DataGridGridLines GridLines = DataGridGridLines.Default;
     private string vendorCode = "";
-    private DateTime startDate = DateTime.Now;
-    private DateTime endDate = DateTime.Now;
+    private DateTime? startDate = DateTime.Now;
+    private DateTime? endDate = DateTime.Now;
     private bool snappIsActive;
     private bool isActive = true;
     private string brandId = "";
@@ -90,26 +90,6 @@
         {
             throw new Exception(ex.Message);
         }
-    }
-
-    private void OnStartDateChanged(DateTime newDate)
-    {
-        startDate = newDate;
-    }
-
-    private void OnEndDateChanged(DateTime newDate)
-    {
-        endDate = newDate;
-    }
-
-    private void OnFilterChanged(string newFilter)
-    {
-        filter = newFilter;
-    }
-
-    private void OnCheckChange(bool newIsActive)
-    {
-        snappIsActive = newIsActive;
     }
 
 }
