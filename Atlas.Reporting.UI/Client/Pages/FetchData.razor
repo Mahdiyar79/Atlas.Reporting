@@ -74,7 +74,7 @@
     {
         try
         {
-            var response = await HttpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={startDate}&endDate={endDate}&snappIsActive={snappIsActive}&isActive={isActive}&brandId={brandId}");
+            var response = await HttpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={startDate}&endDate={endDate}&snappIsActive={snappIsActive}&brandId={brandId}");
             if (response.IsSuccessStatusCode)
             {
                 var reportDtoList = await response.Content.ReadFromJsonAsync<List<ReportDto>>();
