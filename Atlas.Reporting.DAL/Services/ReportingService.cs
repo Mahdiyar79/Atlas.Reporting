@@ -55,7 +55,7 @@ namespace Atlas.Reporting.DAL.Services
             if (report.SnappIsActive != null)
                 snappBrands = await _snappFoodContext.Brands.Where(b => (brandIds.Contains(b.BrandId)) && b.IsEnable == report.SnappIsActive).ToListAsync();
             else
-                await _snappFoodContext.Brands.Where(b => (brandIds.Contains(b.BrandId))).ToListAsync();
+                snappBrands = await _snappFoodContext.Brands.Where(b => (brandIds.Contains(b.BrandId))).ToListAsync();
 
             if ((report.BrandId != null) || (!string.IsNullOrEmpty(report.VendorCode)))
             {
