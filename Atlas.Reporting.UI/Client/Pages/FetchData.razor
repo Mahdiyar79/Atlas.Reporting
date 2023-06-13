@@ -22,8 +22,8 @@
 </div>
 
 <div class="form-group">
-    <RadzenCheckBox @bind-Value=@snappIsActive Name="snappIsActive" />
-    <RadzenLabel Text="Snapp Is Active:" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;" />
+    <label for="endDatePicker">Snapp Is Active:</label>
+    <RadzenDropDown TValue="bool?" @bind-Value="snappIsActive" Data="@snappIsActiveOptions" TextProperty="Text" ValueProperty="Value" />
 </div>
 
 <div class="form-group">
@@ -33,7 +33,7 @@
 </div>
 
 <button class="btn btn-primary" @onclick="ViewReport">View Report</button>
-<button class="btn btn-primary" @onclick="DownloadExcel">دانلود فایل Excel</button>
+<button class="btn btn-primary" @onclick="DownloadExcel">Export (Order Count)</button>
 
 @if (ReportDTos != null)
 {
@@ -58,9 +58,21 @@
     private string? vendorCode;
     private DateTime? startDate = DateTime.Now;
     private DateTime? endDate = DateTime.Now;
-    private bool snappIsActive;
+    private bool? snappIsActive;
     private string? brandId;
     private List<ReportDto> ReportDTos;
+    private List<DropDownItem<bool?>> snappIsActiveOptions = new List<DropDownItem<bool?>>()
+    {
+        new DropDownItem<bool?> { Text = "True", Value = true },
+        new DropDownItem<bool?> { Text = "False", Value = false },
+        new DropDownItem<bool?> { Text = "Null", Value = null }
+    };
+
+    public class DropDownItem<T>
+    {
+        public string Text { get; set; }
+        public T Value { get; set; }
+    }
     private async Task DownloadExcel()
     {
         try
@@ -87,6 +99,7 @@
         {
         }
     }
+
     private async Task ViewReport()
     {
         try
