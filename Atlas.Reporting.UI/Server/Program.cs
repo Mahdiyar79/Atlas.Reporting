@@ -3,10 +3,9 @@ using Atlas.Reporting.DAL.Domain.OrderModel;
 using Atlas.Reporting.DAL.Domain.SnappFoodModel;
 using Atlas.Reporting.DAL.Services;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -26,10 +25,9 @@ builder.Services.AddDbContext<InternalSendingContext>
         c.UseSqlServer(builder.Configuration.GetConnectionString("InternalCnn"));
     });
 builder.Services.AddScoped<IReportingService, ReportingService>();
-
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -37,7 +35,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

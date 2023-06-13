@@ -2,56 +2,58 @@
 @using Atlas.Reporting.UI.Shared.DTOs
 
 @inject HttpClient HttpClient
-
+@inject IJSRuntime Js
 <h3>Filter ReportDTo</h3>
 
 <div class="form-group">
     <RadzenFormField Text="Vendor Code:" Style="width: 100%;">
-        <RadzenTextBox @bind-Value="@vendorCode" Style="width: 100%;"/>
+        <RadzenTextBox @bind-Value="@vendorCode" Style="width: 100%;" />
     </RadzenFormField>
 </div>
 
 <div class="form-group">
     <label for="startDatePicker">start Date:</label>
-    <RadzenDatePicker TValue="DateTime?" @bind-Value=@startDate Change="@(args => startDate =  args)"/>
+    <RadzenDatePicker TValue="DateTime?" @bind-Value=@startDate Change="@(args => startDate =  args)" />
 </div>
 
 <div class="form-group">
     <label for="endDatePicker">end Date:</label>
-    <RadzenDatePicker TValue="DateTime?" @bind-Value="@endDate" Change="@(args => endDate =  args)"/>
+    <RadzenDatePicker TValue="DateTime?" @bind-Value="@endDate" Change="@(args => endDate =  args)" />
 </div>
 
 <div class="form-group">
-    <RadzenCheckBox @bind-Value=@snappIsActive Name="snappIsActive"/>
-    <RadzenLabel Text="Snapp Is Active:" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;"/>
+    <RadzenCheckBox @bind-Value=@snappIsActive Name="snappIsActive" />
+    <RadzenLabel Text="Snapp Is Active:" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;" />
 </div>
 
 <div class="form-group">
     <RadzenFormField Text="Brand ID:" Style="width: 100%;">
-        <RadzenTextBox @bind-Value="@brandId" Style="width: 100%;"/>
+        <RadzenTextBox @bind-Value="@brandId" Style="width: 100%;" />
     </RadzenFormField>
 </div>
 
 <button class="btn btn-primary" @onclick="ViewReport">View Report</button>
+<button class="btn btn-primary" @onclick="DownloadExcel">دانلود فایل Excel</button>
 
 @if (ReportDTos != null)
 {
     <RadzenDataGrid Data="@ReportDTos" TItem="ReportDto" GridLines="@GridLines">
         <Columns>
-            <RadzenDataGridColumn TItem="ReportDto" Property="Raw" Title="Raw"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="BrandId" Title="Brand ID"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="ClientId" Title="Client ID"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="VendorName" Title="VendorName"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="LastPing" Title="LastPing"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="Total" Title="Total"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="SnappFood" Title="SnappFood"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="Salon" Title="Salon"/>
-            <RadzenDataGridColumn TItem="ReportDto" Property="SnappIsActive" Title="SnappIsActive"/>
+            <RadzenDataGridColumn TItem="ReportDto" Property="Raw" Title="Raw" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="BrandId" Title="Brand ID" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="ClientId" Title="Client ID" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="VendorName" Title="VendorName" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="LastPing" Title="LastPing" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="Total" Title="Total" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="SnappFood" Title="SnappFood" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="Salon" Title="Salon" />
+            <RadzenDataGridColumn TItem="ReportDto" Property="SnappIsActive" Title="SnappIsActive" />
         </Columns>
     </RadzenDataGrid>
 }
 
 @code {
+
     DataGridGridLines GridLines = DataGridGridLines.Default;
     private string? vendorCode;
     private DateTime? startDate = DateTime.Now;
@@ -59,13 +61,38 @@
     private bool snappIsActive;
     private string? brandId;
     private List<ReportDto> ReportDTos;
+    private async Task DownloadExcel()
+    {
+        try
+        {
+            int bId;
+            var isConverted = int.TryParse(brandId, out bId);
+            int? id = isConverted ? bId : null;
+            // فراخوانی کنترلر و دریافت فایل اکسل
+            var response = await HttpClient.GetAsync($"api/Excel?vendorCode={vendorCode}&startDate={startDate}&endDate={endDate}&snappIsActive={snappIsActive}&brandId={id}");
 
+            if (response.IsSuccessStatusCode)
+            {
+                byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+                string fileName = "report.xlsx";
+                string mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                await Js.InvokeVoidAsync("BlazorDownloadFile", fileName, mimeType, fileBytes);
+            }
+            else
+            {
+
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
     private async Task ViewReport()
     {
         try
         {
             int bId;
-            var isConverted = int.TryParse(brandId,out bId);
+            var isConverted = int.TryParse(brandId, out bId);
             int? id = isConverted ? bId : null;
             var response = await HttpClient.GetAsync($"/api/Rport?vendorCode={vendorCode}&startDate={startDate}&endDate={endDate}&snappIsActive={snappIsActive}&brandId={id}");
             if (response.IsSuccessStatusCode)

@@ -3,6 +3,7 @@ using Atlas.Reporting.DAL.Domain.OrderModel;
 using Atlas.Reporting.DAL.Domain.SnappFoodModel;
 using Atlas.Reporting.UI.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 namespace Atlas.Reporting.DAL.Services
 {
@@ -92,5 +93,42 @@ namespace Atlas.Reporting.DAL.Services
 
             return result;
         }
+
+        public ExcelPackage CreateExcel(List<ReportDto> result, ExcelPackage package, MemoryStream stream)
+        {
+
+
+
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Report");
+
+            worksheet.Cells[1, 1].Value = "BrandId";
+            worksheet.Cells[1, 2].Value = "VendorName";
+            worksheet.Cells[1, 3].Value = "Salon";
+            worksheet.Cells[1, 4].Value = "SnappFood";
+            worksheet.Cells[1, 5].Value = "Total";
+            worksheet.Cells[1, 6].Value = "SnappIsActive";
+            worksheet.Cells[1, 7].Value = "LastPing";
+            worksheet.Cells[1, 8].Value = "ClientId";
+
+            int row = 2;
+            foreach (var item in result)
+            {
+                worksheet.Cells[row, 1].Value = item.BrandId;
+                worksheet.Cells[row, 2].Value = item.VendorName;
+                worksheet.Cells[row, 3].Value = item.Salon;
+                worksheet.Cells[row, 4].Value = item.SnappFood;
+                worksheet.Cells[row, 5].Value = item.Total;
+                worksheet.Cells[row, 6].Value = item.SnappIsActive;
+                worksheet.Cells[row, 7].Value = item.LastPing.ToString();
+                worksheet.Cells[row, 8].Value = item.ClientId;
+
+                row++;
+            }
+            stream.Position = 0;
+            return package;
+
+
+        }
+
     }
 }
