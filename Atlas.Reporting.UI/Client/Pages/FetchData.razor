@@ -1,36 +1,49 @@
-﻿@page "/fetchdata"
+﻿@page "/"
+@page "/fetchdata"
 @using Atlas.Reporting.UI.Shared.DTOs
 
 @inject HttpClient HttpClient
 @inject IJSRuntime Js
 <h3>Filter ReportDTo</h3>
-
-<div class="form-group">
-    <RadzenFormField Text="Vendor Code:" Style="width: 100%;">
-        <RadzenTextBox @bind-Value="@vendorCode" Style="width: 100%;" />
-    </RadzenFormField>
+<div class="row">
+    <div class=col-md-3>
+        <div class="form-group">
+            <RadzenFormField Text="Brand ID:" Style="width: 100%;">
+                <RadzenTextBox @bind-Value="@brandId" Style="width: 100%;" />
+            </RadzenFormField>
+        </div>
+    </div>
+    <div class=col-md-3>
+        <div class="form-group">
+            <RadzenFormField Text="Vendor Code:" Style="width: 100%;">
+                <RadzenTextBox @bind-Value="@vendorCode" Style="width: 100%;" />
+            </RadzenFormField>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="startDatePicker">start Date:</label>
-    <RadzenDatePicker TValue="DateTime?" @bind-Value=@startDate Change="@(args => startDate =  args)" />
-</div>
 
-<div class="form-group">
-    <label for="endDatePicker">end Date:</label>
-    <RadzenDatePicker TValue="DateTime?" @bind-Value="@endDate" Change="@(args => endDate =  args)" />
-</div>
+<div class="row">
+    <div class=col-md-3>
+        <div class="form-group">
+            <label for="startDatePicker">start Date:</label>
+            <RadzenDatePicker TValue="DateTime?" @bind-Value=@startDate Change="@(args => startDate =  args)" />
+        </div>
+    </div>
 
+    <div class=col-md-3>
+        <div class="form-group">
+            <label for="endDatePicker">end Date:</label>
+            <RadzenDatePicker TValue="DateTime?" @bind-Value="@endDate" Change="@(args => endDate =  args)" />
+        </div>
+    </div>
+</div>
 <div class="form-group">
     <label for="endDatePicker">Snapp Is Active:</label>
     <RadzenDropDown TValue="bool?" @bind-Value="snappIsActive" Data="@snappIsActiveOptions" TextProperty="Text" ValueProperty="Value" />
 </div>
 
-<div class="form-group">
-    <RadzenFormField Text="Brand ID:" Style="width: 100%;">
-        <RadzenTextBox @bind-Value="@brandId" Style="width: 100%;" />
-    </RadzenFormField>
-</div>
+
 
 <button class="btn btn-primary" @onclick="ViewReport">View Report</button>
 <button class="btn btn-primary" @onclick="DownloadExcel">Export (Order Count)</button>
@@ -56,7 +69,7 @@
 
     DataGridGridLines GridLines = DataGridGridLines.Default;
     private string? vendorCode;
-    private DateTime? startDate = DateTime.Now;
+    private DateTime? startDate = DateTime.Now.AddDays(-7);
     private DateTime? endDate = DateTime.Now;
     private bool? snappIsActive;
     private string? brandId;
