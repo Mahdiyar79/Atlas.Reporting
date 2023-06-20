@@ -13,16 +13,19 @@ builder.Services.AddDbContext<OrderContext>
     (c =>
     {
         c.UseSqlServer(builder.Configuration.GetConnectionString("OrderCnn"));
+        c.EnableSensitiveDataLogging();
     });
 builder.Services.AddDbContext<SnappFoodContext>
     (c =>
     {
         c.UseSqlServer(builder.Configuration.GetConnectionString("SnappFoodCnn"));
+        c.EnableSensitiveDataLogging();
     });
 builder.Services.AddDbContext<InternalSendingContext>
     (c =>
     {
         c.UseSqlServer(builder.Configuration.GetConnectionString("InternalCnn"));
+        c.EnableSensitiveDataLogging();
     });
 builder.Services.AddScoped<IReportingService, ReportingService>();
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
