@@ -74,7 +74,6 @@ namespace Atlas.Reporting.DAL.Services
                 s => s.BrandId,
                 (r, s) =>
                   {
-                      r.Raw = rawCounter++;
                       r.VendorName = s.BrandName;
                       r.SnappIsActive = s.IsEnable;
                       r.ClientId = s.SnappClientId;
@@ -91,6 +90,7 @@ namespace Atlas.Reporting.DAL.Services
                       return r;
                   }).ToList();
 
+            result.ForEach(r => r.Raw = rawCounter++);
             return result;
         }
 
