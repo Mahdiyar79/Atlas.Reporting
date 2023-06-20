@@ -50,7 +50,7 @@
 
 @if (ReportDTos != null)
 {
-    <RadzenDataGrid Data="@ReportDTos" TItem="ReportDto" GridLines="@GridLines">
+    <RadzenDataGrid Data="@ReportDTos" TItem="ReportDto" GridLines="@GridLines" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
         <Columns>
             <RadzenDataGridColumn TItem="ReportDto" Property="Raw" Title="Raw" />
             <RadzenDataGridColumn TItem="ReportDto" Property="BrandId" Title="Brand ID" />
